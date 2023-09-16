@@ -15,12 +15,15 @@ class DatabaseHelper {
     });
   }
 
-  //CRUD Methods
-  //We are going to create these four methods
-  //First of all we will create a Json model for our note table
-  //QuickType is an easy way to generate json model
+  //Search Method
+  Future<List<NoteModel>> searchNotes(String keyword) async {
+    final Database db = await initDB();
+    List<Map<String, Object?>> searchResult = await db
+        .rawQuery("select * from notes where noteTitle LIKE ?", ["%$keyword%"]);
+    return searchResult.map((e) => NoteModel.fromMap(e)).toList();
+  }
 
-  //We are done in this section lets go to interface
+  //CRUD Methods
 
   //Create Note
   Future<int> createNote(NoteModel note) async {
